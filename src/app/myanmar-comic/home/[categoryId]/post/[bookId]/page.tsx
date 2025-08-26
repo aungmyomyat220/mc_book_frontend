@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 type BookItem = {
   id: number;
@@ -132,9 +133,15 @@ export default function BookItemPage() {
                 />
               </svg>
             </div>
-            <div>
-              <h3 className="font-medium">အပိုင်း - {item.page_number}</h3>
-              <p className="text-sm text-gray-400">ဖတ်ရန်နှိပ်ပါ</p>
+            <div className='flex justify-between w-full'>
+              <div>
+                <h3 className="font-medium">အပိုင်း - {item.page_number}</h3>
+                <p className="text-sm text-gray-400">ဖတ်ရန်နှိပ်ပါ</p>
+              </div>
+              <div>
+                <Button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md">ဖတ်မည်</Button>
+              </div>
+              
             </div>
           </div>
         ))}
