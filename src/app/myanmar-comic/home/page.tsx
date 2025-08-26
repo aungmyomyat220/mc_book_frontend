@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 interface Category {
   id: number;
@@ -19,7 +20,9 @@ export default function Home() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`
+        );
         if (!response.ok) {
           throw new Error('Failed to fetch categories');
         }
@@ -58,11 +61,11 @@ export default function Home() {
         <h1 className="text-2xl font-bold mb-6 text-center">
           ဇာတ်လမ်းအမျိုးအစား
         </h1>
-        
+
         <div className="space-y-8">
           {categories.map((category) => (
-            <Link 
-              key={category.id} 
+            <Link
+              key={category.id}
               href={`/myanmar-comic/home/${category.id}`}
               className="block group"
             >
@@ -78,11 +81,22 @@ export default function Home() {
                   {/* Gradient overlay for better text readability */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                 </div>
-                
+
                 {/* Content overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                  <h2 className="text-xl font-bold">{category.category_name}</h2>
-                  <p className="text-sm text-gray-200">{category.category_description}</p>
+                <div className="absolute flex justify-between bottom-0 left-0 right-0 p-4 text-white">
+                  <div>
+                    <h2 className="text-xl font-bold">
+                      {category.category_name}
+                    </h2>
+                    <p className="text-sm text-gray-200">
+                      {category.category_description}
+                    </p>
+                  </div>
+                  <div>
+                    <Link href={`/myanmar-comic/home/${category.id}`} className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md">
+                      ဖတ်မည်
+                    </Link>
+                  </div>
                 </div>
               </div>
             </Link>
