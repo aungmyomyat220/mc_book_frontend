@@ -10,6 +10,7 @@ type BookItem = {
   name: string;
   image_link: string;
   content: string;
+  type: string;
 };
 
 type Book = {
@@ -200,64 +201,80 @@ export default function BookItemPage() {
 
       {/* Content */}
       <div className="container mx-auto p-4 max-w-4xl">
-        {/* Item Image */}
-        <div className="mb-6 rounded-lg overflow-hidden shadow-lg">
-          {item.image_link ? (
-            <img
-              src={item.image_link}
-              alt={item.name}
-              className="w-full h-auto"
-              onError={(e) => {
-                (e.target as HTMLImageElement).onerror = null;
-                (e.target as HTMLImageElement).src = '/placeholder.jpg';
-              }}
-            />
-          ) : (
-            <div className="bg-gray-700 h-64 flex items-center justify-center">
-              <span className="text-gray-400">No image available</span>
-            </div>
-          )}
-        </div>
-
-        {/* Item Content */}
-        <div className="bg-gray-800 p-6 rounded-lg mb-6 whitespace-pre-line">
-          {item.content}
-        </div>
-
-        {/* Navigation Controls */}
-        <div className="flex justify-between items-center mt-8 mb-12">
-          <button
-            onClick={() => navigateToItem('prev')}
-            disabled={currentIndex <= 0}
-            className={`px-4 py-2 rounded-lg ${
-              currentIndex <= 0
-                ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-600 hover:bg-blue-700'
-            }`}
-          >
-            နောက်သို့
-          </button>
-
-          <div className="text-center">
-            <span className="text-gray-300">
-              စာမျက်နှာ {currentIndex + 1} / {totalItems}
-            </span>
+        {item.type === 'image' ? (
+          // Render multiple images from content (comma-separated URLs)
+          <div className="space-y-4">
+            {item.content.split(',').map((imageUrl, index) => (
+              <div key={index} className="mb-6 rounded-lg overflow-hidden shadow-lg">
+                <img
+                  src={imageUrl.trim()}
+                  alt={`${item.name} - ${index + 1}`}
+                  className="w-full h-auto"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).onerror = null;
+                    (e.target as HTMLImageElement).src = '/placeholder.jpg';
+                  }}
+                />
+              </div>
+            ))}
           </div>
-
-          <button
-            onClick={() => navigateToItem('next')}
-            disabled={currentIndex >= totalItems - 1}
-            className={`px-4 py-2 rounded-lg ${
-              currentIndex >= totalItems - 1
-                ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-600 hover:bg-blue-700'
-            }`}
-          >
-            ရှေ့ဆက်ရန်
-          </button>
-        </div>
+        ) : (
+          // Original content rendering for non-image types
+          <>
+            {/* Item Image */}
+            {item.image_link && (
+              <div className="mb-6 rounded-lg overflow-hidden shadow-lg">
+                <img
+                  src={item.image_link}
+                  alt={item.name}
+                  className="w-full h-auto"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).onerror = null;
+                    (e.target as HTMLImageElement).src = '/placeholder.jpg';
+                  }}
+                />
+              </div>
+            )}
+            {/* Item Content */}
+            <div className="bg-gray-800 p-6 rounded-lg mb-6 whitespace-pre-line">
+              {item.content}
+            </div>
+          </>
+        )}
       </div>
 
+      {/* Navigation Controls */}
+      <div className="flex justify-between items-center mt-8 mb-12">
+        <button
+          onClick={() => navigateToItem('prev')}
+          disabled={currentIndex <= 0}
+          className={`px-4 py-2 rounded-lg ${
+            currentIndex <= 0
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+              : 'bg-blue-600 hover:bg-blue-700'
+          }`}
+        >
+          နောက်သို့
+        </button>
+
+        <div className="text-center">
+          <span className="text-gray-300">
+            စာမျက်နှာ {currentIndex + 1} / {totalItems}
+          </span>
+        </div>
+
+        <button
+          onClick={() => navigateToItem('next')}
+          disabled={currentIndex >= totalItems - 1}
+          className={`px-4 py-2 rounded-lg ${
+            currentIndex >= totalItems - 1
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+              : 'bg-blue-600 hover:bg-blue-700'
+          }`}
+        >
+          ရှေ့ဆက်ရန်
+        </button>
+      </div>
       {/* Scroll to Top Button */}
       {isVisible && (
         <button

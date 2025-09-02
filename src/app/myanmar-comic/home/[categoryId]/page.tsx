@@ -129,7 +129,7 @@ function CategoryContent() {
             ))}
           </div>
           <button 
-              onClick={() => router.back()}
+              onClick={() => router.push(`/myanmar-comic/home`)}
               className="flex items-center mt-5 text-blue-400 hover:text-blue-300 mr-4"
             >
               <svg 
