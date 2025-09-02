@@ -107,7 +107,9 @@ function CategoryContent() {
       {/* Header */}
       <header className="bg-gray-800 text-white rounded-lg shadow-lg">
         <div className="max-w-4xl mx-auto p-6">
-          <h1 className="text-2xl font-bold">{category.name}</h1>
+          <div className="flex items-center mb-4">
+            <h1 className="text-2xl font-bold">{category.name}</h1>
+          </div>
           <p className="text-gray-300 mt-2">{category.description}</p>
           
           {/* Tag Selection */}
@@ -126,6 +128,25 @@ function CategoryContent() {
               </button>
             ))}
           </div>
+          <button 
+              onClick={() => router.back()}
+              className="flex items-center mt-5 text-blue-400 hover:text-blue-300 mr-4"
+            >
+              <svg 
+                className="w-5 h-5 mr-1" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18" 
+                />
+              </svg>
+              <span>နောက်သို့</span>
+            </button>
         </div>
       </header>
 

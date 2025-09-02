@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 
 interface Category {
   id: number;
@@ -93,9 +92,15 @@ export default function Home() {
                     </p>
                   </div>
                   <div>
-                    <Link href={`/myanmar-comic/home/${category.id}`} className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md">
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.location.href = `/myanmar-comic/home/${category.id}`;
+                      }}
+                      className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md"
+                    >
                       ဖတ်မည်
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import CreateHandler from 'monetag-tg-sdk'
 
 type BookItem = {
   id: number;
@@ -61,6 +62,31 @@ export default function BookItemPage() {
     window.addEventListener('scroll', toggleVisibility);
     return () => window.removeEventListener('scroll', toggleVisibility);
   }, [toggleVisibility]);
+
+  // Ad configuration
+  useEffect(() => {
+    const adHandler = CreateHandler(9748595);
+    
+    adHandler({
+      type: 'inApp',
+      inAppSettings: {
+        frequency: 1,       // max 2 ads
+        capping: 0.1,       // in 6 minutes
+        interval: 50,       // 50s between ads
+        timeout: 50,        // show first ad after 10s
+        everyPage: false,   
+      },
+    }).then(() => {
+      console.log('Ad configured successfully');
+    }).catch((error) => {
+      console.error('Ad configuration error:', error);
+    });
+
+    // Cleanup function
+    return () => {
+      // Add any necessary cleanup for the ad handler here
+    };
+  }, [itemId]);
 
   // Fetch book and item data
   useEffect(() => {
