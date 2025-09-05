@@ -43,7 +43,8 @@ function CategoryContent() {
           title: book.name,
           content: book.description,
           image: book.image_link,
-          tags: book.tags.map((tag: any) => tag.tag.name)
+          tags: book.tags.map((tag: any) => tag.tag.name),
+          views: book.views
         }));
         
         setBooks(transformedBooks);
@@ -60,8 +61,29 @@ function CategoryContent() {
     loadCategoryAndBooks();
   }, [categoryId]);
 
-  // Extract unique tags from books
-  const allTags = ['All', ...new Set(books.flatMap(book => book.tags || []))];
+  // Format view count with k notation for numbers >= 1000
+  const formatViewCount = (count: number) => {
+    if (count >= 1000) {
+      return `${(count / 1000).toFixed(1)}k`;
+    }
+    return count.toString();
+  };
+
+  // Calculate tag counts
+  const tagCounts = books.reduce((acc, book) => {
+    book.tags?.forEach((tag: string) => {
+      acc[tag] = (acc[tag] || 0) + 1;
+    });
+    return acc;
+  }, {} as Record<string, number>);
+
+  // Add 'All' tag with total count
+  const allTags = [
+    { name: 'All', count: books.length },
+    ...Array.from(new Set(books.flatMap(book => book.tags || [])))
+      .map(tag => ({ name: tag, count: tagCounts[tag] || 0 }))
+      .sort((a, b) => b.count - a.count) // Sort by count descending
+  ];
 
   const handleTagFilter = (tag: string) => {
     setSelectedTag(tag);
@@ -116,15 +138,18 @@ function CategoryContent() {
           <div className="flex flex-wrap gap-2 mt-4">
             {allTags.map((tag) => (
               <button
-                key={tag}
-                onClick={() => handleTagFilter(tag)}
-                className={`px-3 py-1 rounded-full text-sm ${
-                  selectedTag === tag
+                key={tag.name}
+                onClick={() => handleTagFilter(tag.name)}
+                className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${
+                  selectedTag === tag.name
                     ? 'bg-red-600 text-white'
                     : 'bg-gray-700 text-gray-200 hover:bg-gray-600'
                 }`}
               >
-                {tag}
+                {tag.name}
+                <span className="text-xs opacity-80 ml-1">
+                  ({formatViewCount(tag.count)})
+                </span>
               </button>
             ))}
           </div>
@@ -170,17 +195,28 @@ function CategoryContent() {
                           className="object-cover"
                         />
                       </div>
-                      <div className="flex-1 p-4">
-                        <h2 className="font-semibold">{book.title}</h2>
-                        <div className="text-white text-sm mt-1 line-clamp-3">
-                          {book.content}
+                      <div className="flex-1 p-4 flex flex-col h-full">
+                        <div className="flex-grow">
+                          <h2 className="font-semibold text-lg mb-2">{book.title}</h2>
+                          <div className="text-white text-sm line-clamp-3 mb-2">
+                            {book.content}
+                          </div>
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {book.tags?.map((tag: string, index: number) => (
+                              <span key={index} className="text-xs bg-gray-300 text-black px-2 py-1 rounded">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
                         </div>
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {book.tags?.map((tag: string, index: number) => (
-                            <span key={index} className="text-xs bg-gray-300 text-black px-2 py-1 rounded">
-                              {tag}
-                            </span>
-                          ))}
+                        <div className="mt-auto pt-2 text-right">
+                          <div className="inline-flex items-center text-sm text-gray-400">
+                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <span>{book.views ? formatViewCount(book.views) : '0'}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
