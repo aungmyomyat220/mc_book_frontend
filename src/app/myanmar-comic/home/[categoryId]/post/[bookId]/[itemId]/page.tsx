@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import CreateHandler from 'monetag-tg-sdk'
+import Image from 'next/image';
 
 type BookItem = {
   id: number;
@@ -78,7 +79,6 @@ export default function BookItemPage() {
         everyPage: false,   
       },
     }).then(() => {
-      console.log('Ad configured successfully');
     }).catch((error) => {
       console.error('Ad configuration error:', error);
     });
@@ -206,9 +206,11 @@ export default function BookItemPage() {
           <div className="space-y-4">
             {item.content.split(',').map((imageUrl, index) => (
               <div key={index} className="mb-6 rounded-lg overflow-hidden shadow-lg">
-                <img
+                <Image
                   src={imageUrl.trim()}
                   alt={`${item.name} - ${index + 1}`}
+                  width={100}
+                  height={100}
                   className="w-full h-auto"
                   onError={(e) => {
                     (e.target as HTMLImageElement).onerror = null;
@@ -224,9 +226,11 @@ export default function BookItemPage() {
             {/* Item Image */}
             {item.image_link && (
               <div className="mb-6 rounded-lg overflow-hidden shadow-lg">
-                <img
+                <Image
                   src={item.image_link}
                   alt={item.name}
+                  width={100}
+                  height={100}
                   className="w-full h-auto"
                   onError={(e) => {
                     (e.target as HTMLImageElement).onerror = null;
